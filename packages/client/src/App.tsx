@@ -7,12 +7,14 @@ import { GraphCanvas } from '@/components/graph/GraphCanvas';
 import { FilterSidebar } from '@/components/panels/FilterSidebar';
 import { ScanProgressPanel } from '@/components/panels/ScanProgressPanel';
 import { ResourceDetailPanel } from '@/components/panels/ResourceDetailPanel';
+import { FolderModal } from '@/components/panels/FolderModal';
 import { useGraphStore } from '@/store/graph-store';
 import { getConnectedEdges } from '@aws-visualizer/shared';
 import { useMemo } from 'react';
+import { AnimatePresence } from 'framer-motion';
 
 export function App() {
-  const { graph, selectedNodeId, scanProgress, selectNode, activeVpcId } = useGraphStore();
+  const { graph, selectedNodeId, scanProgress, selectNode, activeVpcId, activeFolderId } = useGraphStore();
 
   const selectedNode = useMemo(
     () =>
@@ -36,9 +38,9 @@ export function App() {
     <ErrorBoundary>
       <TooltipProvider delayDuration={200}>
         <ReactFlowProvider>
-          <div className="flex flex-col h-screen bg-gradient-to-b from-slate-900 to-slate-950">
+          <div className="flex flex-col h-screen bg-gradient-to-b from-slate-900 to-slate-950 font-sans">
             <Header />
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 overflow-hidden relative">
               {/* Sidebar only shown in VPC drill-down view */}
               {isVpcView && <FilterSidebar />}
 
@@ -63,13 +65,20 @@ export function App() {
 
                 {scanProgress && <ScanProgressPanel progress={scanProgress} />}
 
-                {selectedNode && (
-                  <ResourceDetailPanel
-                    node={selectedNode}
-                    edges={selectedEdges}
-                    onClose={() => selectNode(null)}
-                  />
-                )}
+                <AnimatePresence mode="wait">
+                  {selectedNode && !selectedNode.resource.metadata?.isSummaryCard && (
+                    <ResourceDetailPanel
+                      key="detail-panel"
+                      node={selectedNode}
+                      edges={selectedEdges}
+                      onClose={() => selectNode(null)}
+                    />
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {activeFolderId && <FolderModal key="folder-modal" />}
+                </AnimatePresence>
               </div>
             </div>
           </div>

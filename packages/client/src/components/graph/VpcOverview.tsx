@@ -103,38 +103,38 @@ export function VpcOverview() {
                 onClick={() => setActiveVpc(vpc.id)}
                 className="group text-left bg-slate-800/60 hover:bg-slate-800 border-2 border-emerald-500/40 hover:border-emerald-400/70 rounded-xl p-5 transition-all duration-200 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="p-2 rounded-lg bg-emerald-500/15">
-                      <Network className="w-5 h-5 text-emerald-400" />
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                      <Network className="w-6 h-6 text-emerald-400" />
                     </div>
                     <div>
-                      <div className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors">
+                      <div className="text-lg font-black text-white group-hover:text-emerald-300 transition-colors tracking-tight">
                         {vpc.name}
                       </div>
                       {vpc.cidr && (
-                        <div className="text-xs font-mono text-slate-500">
+                        <div className="text-xs font-mono text-slate-500 mt-0.5">
                           {vpc.cidr}
                         </div>
                       )}
                     </div>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-slate-600 group-hover:text-emerald-400 transition-colors mt-1" />
+                  <ArrowRight className="w-6 h-6 text-slate-700 group-hover:text-emerald-400 transition-all transform group-hover:translate-x-1 mt-1" />
                 </div>
 
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="flex items-center gap-1.5 text-slate-400">
-                    <Layers className="w-3.5 h-3.5" />
-                    <span><strong className="text-slate-200">{vpc.subnetCount}</strong> subnets</span>
+                <div className="flex items-center gap-5 text-sm">
+                  <div className="flex items-center gap-2 text-slate-400">
+                    <Layers className="w-4 h-4 text-slate-500" />
+                    <span><strong className="text-slate-100 font-bold">{vpc.subnetCount}</strong> subnets</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-slate-400">
-                    <Server className="w-3.5 h-3.5" />
-                    <span><strong className="text-slate-200">{vpc.totalResources}</strong> resources</span>
+                  <div className="flex items-center gap-2 text-slate-400">
+                    <Server className="w-4 h-4 text-slate-500" />
+                    <span><strong className="text-slate-100 font-bold">{vpc.totalResources}</strong> resources</span>
                   </div>
                 </div>
 
                 {vpc.isDefault && (
-                  <div className="mt-2.5 text-[10px] font-bold uppercase tracking-wider text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded w-fit">
+                  <div className="mt-4 text-[11px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md w-fit shadow-sm">
                     Default VPC
                   </div>
                 )}

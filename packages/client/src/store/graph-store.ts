@@ -8,6 +8,7 @@ import type {
 interface GraphState {
   readonly graph: Graph | null;
   readonly selectedNodeId: string | null;
+  readonly activeFolderId: string | null;
   readonly filters: FilterCriteria;
   readonly searchQuery: string;
   readonly scanProgress: ScanProgress | null;
@@ -15,6 +16,7 @@ interface GraphState {
 
   setGraph: (graph: Graph) => void;
   selectNode: (id: string | null) => void;
+  setActiveFolder: (id: string | null) => void;
   updateFilters: (filters: FilterCriteria) => void;
   setSearchQuery: (query: string) => void;
   updateScanProgress: (progress: ScanProgress | null) => void;
@@ -24,6 +26,7 @@ interface GraphState {
 export const useGraphStore = create<GraphState>((set) => ({
   graph: null,
   selectedNodeId: null,
+  activeFolderId: null,
   filters: {},
   searchQuery: '',
   scanProgress: null,
@@ -31,7 +34,9 @@ export const useGraphStore = create<GraphState>((set) => ({
 
   setGraph: (graph) => set({ graph }),
 
-  selectNode: (id) => set({ selectedNodeId: id }),
+  selectNode: (id) => set({ selectedNodeId: id, activeFolderId: null }),
+  
+  setActiveFolder: (id) => set({ activeFolderId: id, selectedNodeId: id }),
 
   updateFilters: (filters) => set({ filters }),
 
@@ -43,5 +48,5 @@ export const useGraphStore = create<GraphState>((set) => ({
 
   updateScanProgress: (progress) => set({ scanProgress: progress }),
 
-  setActiveVpc: (vpcId) => set({ activeVpcId: vpcId, selectedNodeId: null }),
+  setActiveVpc: (vpcId) => set({ activeVpcId: vpcId, selectedNodeId: null, activeFolderId: null }),
 }));

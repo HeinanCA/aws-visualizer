@@ -71,7 +71,34 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Ambient glow utility */
+.ambient-glow {
+  position: relative;
+}
+
+.ambient-glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: inherit;
+  filter: blur(12px);
+  opacity: 0.25;
+  z-index: -1;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.ambient-glow:hover::after {
+  opacity: 0.45;
+}
+
+/* Typography refinements */
+h1, h2, h3, h4, .font-black {
+  letter-spacing: -0.02em;
 }
 
 /* Ambient glow keyframes */

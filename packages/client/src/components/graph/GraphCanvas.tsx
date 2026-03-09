@@ -28,7 +28,7 @@ const edgeTypes: EdgeTypes = {
 };
 
 export function GraphCanvas() {
-  const { graph, selectNode, selectedNodeId, activeVpcId } = useGraphStore();
+  const { graph, selectNode, selectedNodeId, activeVpcId, setActiveFolder } = useGraphStore();
 
   // Build a subgraph for just the active VPC
   const vpcGraph = useMemo((): Graph | null => {
@@ -71,11 +71,21 @@ export function GraphCanvas() {
   }, [edges, selectedNodeId]);
 
   const handleNodeClick = useCallback(
-    (_: unknown, node: Node) => selectNode(node.id),
-    [selectNode],
+    (_: unknown, node: Node) => {
+      if (node.type === 'summaryNode') {
+        setActiveFolder(node.id);
+      } else {
+        selectNode(node.id);
+      }
+    },
+    [selectNode, setActiveFolder],
   );
 
-  const handlePaneClick = useCallback(() => selectNode(null), [selectNode]);
+  const handlePaneClick = useCallback(() => {
+    selectNode(null);
+    setActiveFolder(null);
+  }, [selectNode, setActiveFolder]);
+
 
   if (!vpcGraph) return null;
 

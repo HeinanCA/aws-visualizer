@@ -4,24 +4,25 @@ import type { Graph, GraphNode, GraphEdge } from '@aws-visualizer/shared';
 import { RESOURCE_TYPE_METADATA } from '@aws-visualizer/shared';
 
 // ── Dimensions ──────────────────────────────────────────────
-const RESOURCE_W = 110;
-const RESOURCE_H = 80;
-const RESOURCE_GAP = 10;
+const RESOURCE_W = 160;
+const RESOURCE_H = 140;
+const RESOURCE_GAP = 40; // Massive gap for architectural clarity
 
-const SUMMARY_W = 160;
-const SUMMARY_H = 80;
+const SUMMARY_W = 200;
+const SUMMARY_H = 120;
 
-const SUBNET_HEADER = 40;
-const SUBNET_PAD = 14;
-const SUBNET_GAP = 24;
-const SUBNET_COLS = 3; // max subnets per row inside VPC
+const SUBNET_HEADER = 80; // Taller header for new GroupNode style
+const SUBNET_PAD = 48;    // Massive internal padding
+const SUBNET_GAP = 80;    // Massive gap between subnets
+const SUBNET_COLS = 2;    // Fewer cols = more vertical (cleaner) flow
 
-const VPC_HEADER = 44;
-const VPC_PAD = 24;
-const SUMMARY_GAP = 16;
+const VPC_HEADER = 100;
+const VPC_PAD = 80;
+const SUMMARY_GAP = 60;
 
 const SUMMARY_PREFIX = '__summary_';
-const COLLAPSE_THRESHOLD = 3;
+const SUMMARY_DELIMITER = ':::';
+const COLLAPSE_THRESHOLD = 5; // Reduced threshold to make folders more common and useful
 
 export function useLayout(graph: Graph | null) {
   const [nodes, setNodes] = useState<Node[]>([]);
@@ -114,7 +115,7 @@ function computeManualLayout(graph: Graph): LayoutResult {
     for (const [type, members] of leafByType) {
       if (members.length >= COLLAPSE_THRESHOLD) {
         const meta = (RESOURCE_TYPE_METADATA as Record<string, { label: string }>)[type];
-        const summaryId = `${SUMMARY_PREFIX}${vpc.id}_${type}`;
+        const summaryId = `${SUMMARY_PREFIX}${vpc.id}${SUMMARY_DELIMITER}${type}`;
         summaryCards.push({
           id: summaryId,
           resource: {
@@ -134,7 +135,7 @@ function computeManualLayout(graph: Graph): LayoutResult {
 
     // Collapse empty subnets into summary
     if (emptySubnets.length > 0) {
-      const summaryId = `${SUMMARY_PREFIX}${vpc.id}_empty_subnets`;
+      const summaryId = `${SUMMARY_PREFIX}${vpc.id}${SUMMARY_DELIMITER}empty_subnets`;
       summaryCards.push({
         id: summaryId,
         resource: {
@@ -358,9 +359,10 @@ function buildFlowEdges(graphEdges: readonly GraphEdge[]): Edge[] {
     source: e.source,
     target: e.target,
     type: 'animated',
+    // Remove static arrows for a cleaner admin view
     data: {
       relationship: e.label,
-      animated: e.relationship === 'triggers',
+      animated: true,
     },
   }));
 }

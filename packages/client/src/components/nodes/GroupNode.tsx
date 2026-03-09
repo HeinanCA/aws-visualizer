@@ -75,52 +75,56 @@ export const GroupNode = memo(function GroupNode({
   return (
     <div
       className={cn(
-        'rounded-xl border-2 transition-all duration-150 overflow-visible',
+        'rounded-[2.5rem] border-2 transition-all duration-500 overflow-visible backdrop-blur-2xl',
         style.borderColor,
         style.bodyBg,
-        selected && 'ring-2 ring-blue-400/50 shadow-[0_0_20px_rgba(59,130,246,0.15)]',
-        isVpc && 'border-[2.5px]',
-        isSyntheticGroup && 'border-dashed',
+        selected ? 'ring-4 ring-blue-500/30 shadow-[0_0_50px_rgba(59,130,246,0.15)] scale-[1.01] z-10' : 'shadow-2xl',
+        isVpc ? 'border-[3px] bg-emerald-950/10' : 'bg-blue-950/10',
+        isSyntheticGroup && 'border-dashed opacity-80',
       )}
-      style={{ minWidth, minHeight }}
+      style={{ width: '100%', height: '100%', minWidth, minHeight }}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!bg-slate-500 !border-slate-700 !w-1.5 !h-1.5 !min-w-0 !min-h-0"
+        className="!bg-slate-500 !border-slate-950 !w-3 !h-3 !-top-1.5 !min-w-0 !min-h-0 shadow-lg"
       />
 
       {/* Container header bar */}
       <div className={cn(
-        'flex items-center gap-2 px-3 py-1.5 rounded-t-[9px] border-b',
-        style.headerBg,
+        'flex items-center gap-4 px-6 py-4 rounded-t-[1.85rem] border-b-2 bg-gradient-to-r from-black/40 to-transparent',
         style.borderColor,
         isSyntheticGroup && 'border-dashed',
       )}>
-        {Icon && <Icon className={cn('w-4 h-4', style.headerText)} strokeWidth={2} />}
-        <span className={cn('text-xs font-bold uppercase tracking-wide', style.headerText)}>
-          {isSyntheticGroup ? resource.name : (meta?.label ?? resource.type)}
-        </span>
-        {!isSyntheticGroup && (
-          <span className="text-xs text-slate-400 truncate">
-            {resource.name}
+        <div className={cn('p-2 rounded-xl bg-black/30 border border-white/5 shadow-inner', style.headerText)}>
+          {Icon && <Icon className="w-5 h-5" strokeWidth={2.5} />}
+        </div>
+        <div className="flex flex-col">
+          <span className={cn('text-[10px] font-black uppercase tracking-[0.2em] leading-none opacity-70', style.headerText)}>
+            {isSyntheticGroup ? 'Group' : (meta?.label ?? resource.type)}
           </span>
-        )}
-        {typeof resource.metadata?.cidrBlock === 'string' && (
-          <span className="text-[10px] font-mono text-slate-500 ml-auto">
-            {resource.metadata.cidrBlock}
+          <span className={cn('text-sm font-bold tracking-tight mt-1 truncate max-w-[200px]', style.headerText)}>
+             {isSyntheticGroup ? resource.name : (resource.name || resource.id)}
           </span>
-        )}
-        {isSubnet && (
-          <span className={cn(
-            'text-[10px] font-bold px-1.5 py-0.5 rounded ml-auto',
-            isPublic
-              ? 'bg-emerald-500/20 text-emerald-400'
-              : 'bg-amber-500/20 text-amber-400',
-          )}>
-            {isPublic ? 'PUBLIC' : 'PRIVATE'}
-          </span>
-        )}
+        </div>
+        
+        <div className="ml-auto flex items-center gap-3">
+          {typeof resource.metadata?.cidrBlock === 'string' && (
+            <span className="text-[11px] font-mono text-slate-400 font-medium bg-black/40 px-3 py-1 rounded-full border border-white/5">
+              {resource.metadata.cidrBlock}
+            </span>
+          )}
+          {isSubnet && (
+            <span className={cn(
+              'text-[10px] font-black px-3 py-1 rounded-full tracking-widest shadow-sm border',
+              isPublic
+                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                : 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+            )}>
+              {isPublic ? 'PUBLIC' : 'PRIVATE'}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Children are rendered inside this space by React Flow */}
