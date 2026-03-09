@@ -23,6 +23,18 @@
 
 ---
 
+## 🖼️ Visuals
+
+### Next-Gen Launcher
+![Infrastructure Launcher](docs/images/launcher-preview.png)
+*High-end spatial launcher for your cloud resources.*
+
+### iOS-style Folder Interaction
+![Folder Interaction](docs/images/folder-preview.png)
+*Massive resource groups collapse into interactive, airy folder platters.*
+
+---
+
 ## 🔍 Architecture
 
 ```
@@ -105,7 +117,7 @@ MIT — see [LICENSE](LICENSE) for details. Built for engineers who care about q
 
 ---
 
-Built with 💚 by **HTDevOps LTD** · [HT DevOps](https://htdevops.top)  
+Built with 💚 by **Heinan Cabouly** · [HT DevOps](https://htdevops.top)  
 *Elevate your cloud visibility.*
 
 Upgrade your shell-fu with [Mastering Bash Scripts](https://www.udemy.com/course/mastering-bash-scripts/?couponCode=08F7AB7FB06373BDB532) – 40% off
