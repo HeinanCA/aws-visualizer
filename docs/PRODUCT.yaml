@@ -1,0 +1,197 @@
+# AWS Visualizer — Product Definition
+#
+# An open-source infrastructure dashboard for teams who need to understand,
+# document, and clean up their AWS accounts.
+#
+# Built for regulated industries. Beautiful enough to show an auditor.
+# Useful enough to use daily. Goes with you on any screen.
+
+# ---------------------------------------------------------------------------
+# THE PROBLEM
+# ---------------------------------------------------------------------------
+# Someone gets handed an AWS account — or inherits one — and needs to answer:
+#   - What do we have?
+#   - What talks to what?
+#   - Who owns what?
+#   - What does it cost?
+#   - What's unused and can be deleted?
+#   - Can I prove this to an auditor?
+
+# ---------------------------------------------------------------------------
+# TARGET USERS
+# ---------------------------------------------------------------------------
+target_users:
+  - role: DevOps / Platform engineers
+    context: Regulated companies
+    need: Audit-ready infrastructure documentation
+
+  - role: Engineering leads
+    context: Inheriting or auditing an AWS account
+    need: Understand what exists and how it connects
+
+  - role: Compliance / QA teams
+    context: FDA/MDR regulated products
+    need: Evidence that infrastructure matches documented architecture
+
+# ---------------------------------------------------------------------------
+# DIFFERENTIATORS
+# ---------------------------------------------------------------------------
+differentiators:
+  - Open source, free as in free beer — no license fees, no vendor lock-in
+  - Built for regulated industries — FDA/MDR compliance awareness baked in
+  - Zero trust barrier — Docker container, credentials never leave your network
+  - Beautiful and responsive — mobile, tablet, desktop. Recognizable design
+
+# ---------------------------------------------------------------------------
+# WHAT THIS IS NOT
+# ---------------------------------------------------------------------------
+not_in_scope:
+  - Security scanner (use ScoutSuite, Prowler)
+  - Cost management platform (use AWS Cost Explorer for deep analysis)
+  - Multi-cloud (AWS-first, do one thing well)
+
+# ---------------------------------------------------------------------------
+# DESIGN PRINCIPLES
+# ---------------------------------------------------------------------------
+design_principles:
+  responsive_first:
+    mobile: Scannable resource list, tap to drill, swipe between VPCs
+    tablet: Split view (sidebar + graph)
+    desktop: Full graph canvas with panels
+    rule: Same data, different density — not a shrunken desktop
+
+  recognizable:
+    - Consistent visual language — green VPCs, blue subnets, category-colored icons
+    - Dark mode as default
+    - The graph visualization IS the brand
+
+  desirable:
+    - No data tables as primary view
+    - Animations with purpose — scan progress, connections, drill-in transitions
+    - Typography and spacing that breathe
+    - Quality details — smooth zoom, subtle glow on active resources
+
+  information_hierarchy:
+    level_1_overview: VPC cards, health at a glance, cost summary
+    level_2_vpc_drill_in: Subnets as containers, resource relationships
+    level_3_resource_detail: Metadata, connections, cost, ownership, compliance flags
+    rule: Each level shows exactly what you need. Nothing more.
+
+# ---------------------------------------------------------------------------
+# DEPLOYMENT MODEL
+# ---------------------------------------------------------------------------
+deployment:
+  method: Single Docker image
+  command: "docker run -p 3000:3000 -v ~/.aws:/root/.aws:ro aws-visualizer"
+
+  principles:
+    - Read-only mount of existing AWS credentials
+    - Works with SSO, profiles, MFA — whatever user already has
+    - All data stays local — nothing leaves their network
+    - No signup, no account creation, no IAM role provisioning
+    - No trust required — user controls everything
+
+  why_regulated_companies_love_it:
+    - Credentials never leave the user's network
+    - Security teams can't object — nothing new created in AWS account
+    - Auditable — same credentials they already use for AWS CLI
+    - Deployable on their own infra for team access
+
+  team_sharing_future: >
+    Deploy same Docker image to internal infrastructure (ECS, EKS, on-prem).
+    Add authentication at the ingress level. Same tool, shared across team.
+
+# ---------------------------------------------------------------------------
+# PHASED ROADMAP
+# ---------------------------------------------------------------------------
+roadmap:
+  phase_1_see:
+    goal: Scan an account, visualize everything, look beautiful on any screen
+    deliverables:
+      - Scan single AWS account/region
+      - VPC-level drill-down with resource relationships
+      - Responsive UI (mobile, tablet, desktop)
+      - Real-time scan progress via WebSocket
+      - Docker-based deployment
+
+  phase_1_5_remember:
+    goal: Persist scan results, enable before/after comparison
+    deliverables:
+      - Store scan results in local database (SQLite or embedded Postgres)
+      - Scan history — view any previous scan
+      - Snapshot diffing — what changed since last scan?
+      - Scheduled re-scans
+
+  phase_2_waste:
+    goal: Show users where they're wasting money. This is the viral moment.
+    deliverables:
+      - "Orphan detection":
+          - Unattached Elastic IPs
+          - Unused security groups (no attached ENIs)
+          - Detached EBS volumes
+          - Empty S3 buckets with no policy
+          - Load balancers with no targets
+      - Estimated monthly cost per resource (AWS Pricing API)
+      - "You could save $X/month" summary on overview page
+      - "Confidence score: safe to delete?" per orphaned resource
+
+  phase_3_own:
+    goal: Understand who owns what, produce audit-ready output
+    deliverables:
+      - Tag-based ownership analysis (team, service, environment, cost-center)
+      - Unowned resources report — missing required tags
+      - Export infrastructure diagram as PDF/SVG
+      - Export resource inventory as CSV/JSON
+      - Multi-region scanning — aggregate all regions, filter by region
+
+  phase_4_comply:
+    goal: Serve regulated companies with compliance-specific features
+    deliverables:
+      - Compliance view — map resources to IEC 62304/62443 requirements
+      - Public exposure report — internet-facing, open SGs, public S3
+      - Security posture summary — NACLs, SGs, encryption status
+      - Export compliance evidence pack (FDA 510k, MDR technical file)
+      - Change evidence — infrastructure delta between audit dates
+
+# ---------------------------------------------------------------------------
+# TECHNICAL ARCHITECTURE
+# ---------------------------------------------------------------------------
+architecture:
+  container_contents:
+    frontend: React 19 + React Flow + Tailwind CSS (Vite SPA)
+    backend: Fastify 5 + TypeScript (REST + WebSocket)
+    scanners: 21 AWS resource scanners via AWS SDK v3
+    shared: Types, constants, validation, graph utilities
+    credentials: Uses mounted ~/.aws credentials
+
+  monorepo_structure:
+    shared: Types, constants, validation, graph utilities
+    server: Fastify API, scanners, WebSocket handler
+    client: React SPA, graph visualization, responsive UI
+
+  key_decisions:
+    - Monorepo with npm workspaces — shared types between server and client
+    - ELK.js for graph layout — hierarchical with parent/child nesting
+    - Zustand for state — lightweight, immutable
+    - React Flow (@xyflow/react) — interactive graph canvas
+    - Docker — single container, zero external dependencies
+
+# ---------------------------------------------------------------------------
+# SUCCESS METRICS
+# ---------------------------------------------------------------------------
+success_metrics:
+  phase_1:
+    - "docker run to seeing infrastructure in < 2 minutes"
+    - VPC drill-in usable with 500+ resources
+    - Works on mobile viewport (375px+)
+
+  phase_2:
+    - First scan shows at least 1 orphan for 90% of accounts
+    - Cost estimate within 20% of actual for covered resource types
+
+  phase_3:
+    - PDF export accepted by QA teams as infrastructure documentation
+    - Tag coverage report identifies >80% of untagged resources
+
+  phase_4:
+    - Compliance evidence pack passes initial review by regulatory consultant

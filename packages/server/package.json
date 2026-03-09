@@ -1,0 +1,36 @@
+{
+  "name": "@aws-visualizer/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-cloudwatch": "^3.750.0",
+    "@aws-sdk/client-ec2": "^3.750.0",
+    "@aws-sdk/client-eks": "^3.750.0",
+    "@aws-sdk/client-elastic-load-balancing-v2": "^3.750.0",
+    "@aws-sdk/client-iam": "^3.750.0",
+    "@aws-sdk/client-lambda": "^3.750.0",
+    "@aws-sdk/client-s3": "^3.750.0",
+    "@aws-sdk/client-sns": "^3.750.0",
+    "@aws-sdk/client-sqs": "^3.750.0",
+    "@aws-sdk/credential-providers": "^3.750.0",
+    "@aws-visualizer/shared": "*",
+    "@fastify/cors": "^10.0.0",
+    "@fastify/static": "^8.0.0",
+    "@fastify/websocket": "^11.0.0",
+    "fastify": "^5.2.0",
+    "nanoid": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.5",
+    "@types/ws": "^8.18.1",
+    "aws-sdk-client-mock": "^4.1.0",
+    "tsx": "^4.19.0"
+  }
+}
